@@ -11,7 +11,7 @@ public abstract class AbstractTransaction<T, K, V> implements Transaction<T, K, 
 
     private static ThreadLocal<AbstractTransaction> transactionThreadLocal = new ThreadLocal<>();
 
-    private Table<T, K, V> metadata = HashBasedTable.create();
+    private Table<T, K, MetaData<V>> metadata = HashBasedTable.create();
     private Table<T, K, TemporaryData<V>> temporaryDatas = HashBasedTable.create();
 
     private boolean isRollbackOnly = false;
@@ -37,12 +37,12 @@ public abstract class AbstractTransaction<T, K, V> implements Transaction<T, K, 
     }
 
     @Override
-    public void setMetadata(T tableName, K key, V value) {
+    public void setMetadata(T tableName, K key, MetaData<V> value) {
         metadata.put(tableName, key, value);
     }
 
     @Override
-    public Optional<V> getMetadata(T tableName, K key) {
+    public Optional<MetaData<V>> getMetadata(T tableName, K key) {
         return Optional.ofNullable(metadata.get(tableName, key));
     }
 

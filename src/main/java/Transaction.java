@@ -15,9 +15,9 @@ public interface Transaction<T, K, V> {
 
     boolean isRollbackOnly();
 
-    void setMetadata(T tableName, K key, V value);
+    void setMetadata(T tableName, K key, MetaData<V> metaData);
 
-    Optional<V> getMetadata(T tableName, K key);
+    Optional<MetaData<V>> getMetadata(T tableName, K key);
 
     void begin();
 
@@ -31,6 +31,24 @@ public interface Transaction<T, K, V> {
 
     enum Operation {
         GET,SET,DEL
+    }
+
+    class MetaData<V> {
+
+        private Optional<V> value;
+
+        public MetaData(Optional<V> value) {
+            this.value = value;
+        }
+
+        public Optional<V> getValue() {
+            return value;
+        }
+
+        public void setValue(Optional<V> value) {
+            this.value = value;
+        }
+
     }
 
     class TemporaryData<V> {
@@ -61,28 +79,15 @@ public interface Transaction<T, K, V> {
             this.value = value;
         }
 
-        public static TemporaryData operate(TemporaryData temporaryData, Operation operation, Object value) {
+        public TemporaryData<V> operate( Operation operation, V value) {
 
-            if (operation == Operation.GET) {
-                return temporaryData;
-            }
-
-            if (temporaryData == null) {
-                temporaryData = new TemporaryData(operation, value);
-            } else {
-                temporaryData.setOperation(operation);
-                temporaryData.setValue(value);
-            }
-
-            return temporaryData;
-        }
-
-        public TemporaryData operate(Operation operation, V value) {
             if (operation == Operation.GET) {
                 return this;
             }
+
             setOperation(operation);
             setValue(value);
+
             return this;
         }
 
