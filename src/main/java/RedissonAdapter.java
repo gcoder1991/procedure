@@ -1,4 +1,5 @@
 import org.redisson.Redisson;
+import org.redisson.api.RBinaryStream;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 
@@ -19,16 +20,19 @@ public class RedissonAdapter implements DatabaseAdapter<String, String, byte[]> 
 
     @Override
     public Optional<byte[]> get(String table, String key) {
-        return null;
+    	RBinaryStream binaryStream = redisson.getBinaryStream(RedisUtils.getStringKey(table, key));
+        return Optional.ofNullable(binaryStream.get());
     }
 
     @Override
     public void set(String table, String key, byte[] value) {
-
+    	RBinaryStream binaryStream = redisson.getBinaryStream(RedisUtils.getStringKey(table, key));
+    	binaryStream.trySet(value);
     }
 
     @Override
     public void delete(String table, String key) {
-
+    	RBinaryStream binaryStream = redisson.getBinaryStream(RedisUtils.getStringKey(table, key));
+    	binaryStream.delete();
     }
 }
