@@ -133,7 +133,7 @@ public abstract class TTable<K, V> implements CacheAble<K, V>{
         if (temporaryData.isPresent()) {
             transaction.setTemporaryData(tableName, key, temporaryData.get().operate(Transaction.Operation.DEL, null));
         } else {
-            transaction.setTemporaryData(tableName, key ,new Transaction.TemporaryData<>(Transaction.Operation.DEL, null));
+            transaction.setTemporaryData(tableName, key ,new Transaction.TemporaryData<V>(Transaction.Operation.DEL, null));
         }
 
     }
