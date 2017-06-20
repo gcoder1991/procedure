@@ -1,6 +1,8 @@
+package com.gcoder.database;
+
+import com.gcoder.util.RedisUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.Optional;
@@ -10,12 +12,10 @@ import java.util.Optional;
  */
 public class JedisAdapter implements DatabaseAdapter<String,String,byte[]> {
 
-    private JedisPoolConfig jedisPoolConfig;
     private JedisPool jedisPool;
 
-    public JedisAdapter() {
-        this.jedisPoolConfig = new JedisPoolConfig();
-        this.jedisPool = new JedisPool(jedisPoolConfig, "127.0.0.1", 6379, 1000, null);
+    public JedisAdapter(JedisPool jedisPool) {
+        this.jedisPool = jedisPool;
     }
 
     @Override

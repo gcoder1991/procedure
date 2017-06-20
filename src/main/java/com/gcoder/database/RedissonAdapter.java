@@ -1,21 +1,20 @@
-import org.redisson.Redisson;
+package com.gcoder.database;
+
+import com.gcoder.util.RedisUtils;
 import org.redisson.api.RBinaryStream;
 import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
 
 import java.util.Optional;
 
 /**
- * Created by Administrator on 2017/6/19.
+ * Created by gcoder on 2017/6/19.
  */
 public class RedissonAdapter implements DatabaseAdapter<String, String, byte[]> {
 
-    private Config config;
     private RedissonClient redisson;
 
-    public RedissonAdapter(Config config) {
-        this.config = config;
-        this.redisson = Redisson.create(config);
+    public RedissonAdapter(RedissonClient redisson) {
+        this.redisson = redisson;
     }
 
     @Override

@@ -1,3 +1,5 @@
+package com.gcoder.util;
+
 import java.nio.charset.Charset;
 
 /**

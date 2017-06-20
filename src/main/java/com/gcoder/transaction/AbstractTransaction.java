@@ -1,3 +1,5 @@
+package com.gcoder.transaction;
+
 import com.gcoder.exception.TransactionException;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -68,7 +70,7 @@ public abstract class AbstractTransaction<T, K, V> implements Transaction<T, K, 
         preBegin();
         AbstractTransaction transaction = transactionThreadLocal.get();
         if (transaction != null && transaction.getStatus() == Status.RUNNING) {
-            throw new TransactionException("Create Transaction error : There is a transaction has not be committed.");
+            throw new TransactionException("Create com.gcoder.transaction.Transaction error : There is a transaction has not be committed.");
         }
         if (transaction != null) {
             transactionThreadLocal.remove();

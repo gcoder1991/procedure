@@ -1,4 +1,8 @@
+package com.gcoder.table;
+
 import com.gcoder.exception.TransactionException;
+import com.gcoder.transaction.Transaction;
+import com.gcoder.util.TransactionUtils;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
@@ -7,7 +11,7 @@ import java.util.Optional;
 /**
  * Created by gcoder on 2017/6/17.
  */
-public abstract class TTable<K, V> implements CacheAble<K, V>{
+public abstract class TTable<K, V> implements CacheAble<K, V> {
 
     private final String tableName;
     private final DatabaseAdapter<String, K, V> database;
