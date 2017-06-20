@@ -1,5 +1,8 @@
 package com.gcoder.table;
 
+import com.gcoder.cache.CacheAble;
+import com.gcoder.cache.CacheAdapter;
+import com.gcoder.database.DatabaseAdapter;
 import com.gcoder.exception.TransactionException;
 import com.gcoder.transaction.Transaction;
 import com.gcoder.util.TransactionUtils;

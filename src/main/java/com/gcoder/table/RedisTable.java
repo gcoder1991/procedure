@@ -1,5 +1,8 @@
 package com.gcoder.table;
 
+import com.gcoder.cache.CacheAdapter;
+import com.gcoder.database.DatabaseAdapter;
+
 /**
  * Created by gcoder on 2017/6/19.
  */
