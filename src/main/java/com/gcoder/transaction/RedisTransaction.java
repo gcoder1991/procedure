@@ -1,19 +1,27 @@
 package com.gcoder.transaction;
 
+import com.gcoder.database.redis.RedisAdapter;
+import com.google.common.collect.Table;
+
 /**
  * Created by gcoder on 2017/6/17.
  */
 public class RedisTransaction extends AbstractTransaction<String, String, byte[]> {
 
+    private RedisAdapter redis;
 
-    @Override
-    protected AbstractTransaction create() {
-        return new RedisTransaction();
+    public RedisTransaction() {
+    }
+
+    public RedisTransaction(RedisAdapter redis) {
+        this.redis = redis;
     }
 
     @Override
     protected void preBegin() {
-
+        if(this.getStatus() != Status.RUNNING) {
+            return;
+        }
     }
 
     @Override
@@ -29,12 +37,15 @@ public class RedisTransaction extends AbstractTransaction<String, String, byte[]
     @Override
     public void commit() {
         preCommit();
+
+        Table<String, String, TemporaryData<byte[]>> temporaryDatas = getTemporaryDatas();
+
         postCommit();
     }
 
     @Override
     protected void postCommit() {
-
+        setStatus(Status.COMMITTED);
     }
 
     @Override
@@ -50,7 +61,7 @@ public class RedisTransaction extends AbstractTransaction<String, String, byte[]
 
     @Override
     protected void postRollback() {
-
+        setStatus(Status.ROLLEDBACK);
     }
 
 }

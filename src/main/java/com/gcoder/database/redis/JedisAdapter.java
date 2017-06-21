@@ -1,4 +1,4 @@
-package com.gcoder.database;
+package com.gcoder.database.redis;
 
 import com.gcoder.util.RedisUtils;
 import redis.clients.jedis.Jedis;
@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Created by gcoder on 2017/6/19.
  */
-public class JedisAdapter implements DatabaseAdapter<String,String,byte[]> {
+public class JedisAdapter implements RedisAdapter {
 
     private JedisPool jedisPool;
 

@@ -1,4 +1,4 @@
-package com.gcoder.database;
+package com.gcoder.database.redis;
 
 import com.gcoder.util.RedisUtils;
 import org.redisson.api.RBinaryStream;
@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * Created by gcoder on 2017/6/19.
  */
-public class RedissonAdapter implements DatabaseAdapter<String, String, byte[]> {
+public class RedissonAdapter implements RedisAdapter {
 
     private RedissonClient redisson;
 

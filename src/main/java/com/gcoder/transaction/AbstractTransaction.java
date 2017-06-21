@@ -23,6 +23,14 @@ public abstract class AbstractTransaction<T, K, V> implements Transaction<T, K, 
         this.status = status;
     }
 
+    public Table<T, K, TemporaryData<V>> getTemporaryDatas() {
+        return temporaryDatas;
+    }
+
+    public Table<T, K, MetaData<V>> getMetadatas() {
+        return metadata;
+    }
+
     @Override
     public Status getStatus() {
         return status;
@@ -61,8 +69,6 @@ public abstract class AbstractTransaction<T, K, V> implements Transaction<T, K, 
         return Optional.ofNullable(temporaryDatas.get(table, key));
     }
 
-    protected abstract AbstractTransaction create();
-
     protected abstract void preBegin();
 
     @Override
@@ -75,7 +81,7 @@ public abstract class AbstractTransaction<T, K, V> implements Transaction<T, K, 
         if (transaction != null) {
             transactionThreadLocal.remove();
         }
-        transactionThreadLocal.set(create());
+        transactionThreadLocal.set(this);
         postBegin();
     }
 
@@ -88,5 +94,9 @@ public abstract class AbstractTransaction<T, K, V> implements Transaction<T, K, 
     protected abstract void preRollback();
 
     protected abstract void postRollback();
+
+    public static final Optional<Transaction> current() {
+        return Optional.ofNullable(transactionThreadLocal.get());
+    }
 
 }
