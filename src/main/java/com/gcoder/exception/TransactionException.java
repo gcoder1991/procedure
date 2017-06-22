@@ -11,4 +11,8 @@ public class TransactionException extends GException {
         super(message);
     }
 
+    public TransactionException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
+
 }

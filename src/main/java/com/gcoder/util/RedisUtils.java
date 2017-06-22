@@ -14,9 +14,9 @@ public final class RedisUtils {
     }
     
     public static final String getStringKey(String... key) {
-    	String strKey = new String();
+    	String strKey = "";
         for (int i = 0; i < key.length; i++) {
-            strKey.concat(key[i]).concat(":");
+            strKey = strKey.concat(key[i]).concat(":");
         }
         return strKey;
     }

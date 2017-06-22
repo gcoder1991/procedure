@@ -6,8 +6,7 @@ import com.gcoder.database.DatabaseAdapter;
 /**
  * Created by gcoder on 2017/6/19.
  */
-public class RedisTable extends TTable<String, byte[]> {
-
+public class RedisTable extends TTable<String, String, byte[]> {
 
     public RedisTable(String tableName, DatabaseAdapter<String, String, byte[]> database) {
         super(tableName, database);

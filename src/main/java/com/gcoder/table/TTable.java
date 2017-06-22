@@ -14,20 +14,19 @@ import java.util.Optional;
 /**
  * Created by gcoder on 2017/6/17.
  */
-public abstract class TTable<K, V> implements CacheAble<K, V> {
+public abstract class TTable<T, K, V> implements CacheAble<K, V> {
 
-    private final String tableName;
-    private final DatabaseAdapter<String, K, V> database;
+    private final T tableName;
+    private final DatabaseAdapter<T, K, V> database;
 
-    private CacheAdapter<String, K, V> cache;
+    private CacheAdapter<T, K, V> cache;
     private boolean enableCache;
 
-    public TTable(String tableName, DatabaseAdapter<String, K, V> database) {
-        this.tableName = tableName;
-        this.database = database;
+    public TTable(T tableName, DatabaseAdapter<T, K, V> database) {
+        this(tableName, database, null, false);
     }
 
-    public TTable(String tableName, DatabaseAdapter<String, K, V> database, CacheAdapter<String, K, V> cache, boolean enableCache) {
+    public TTable(T tableName, DatabaseAdapter<T, K, V> database, CacheAdapter<T, K, V> cache, boolean enableCache) {
         this.tableName = tableName;
         this.database = database;
         this.cache = cache;
@@ -51,7 +50,7 @@ public abstract class TTable<K, V> implements CacheAble<K, V> {
         }
     }
 
-    private Optional<V> getFromTransaction(@NotNull Transaction<String, K, V> transaction, @NotNull K key) {
+    private Optional<V> getFromTransaction(@NotNull Transaction<T, K, V> transaction, @NotNull K key) {
 
         if(TransactionUtils.isNull(transaction)) {
             throw new TransactionException("The transaction can not be null.");
@@ -81,7 +80,7 @@ public abstract class TTable<K, V> implements CacheAble<K, V> {
         }
     }
 
-    public Optional<V> get(@Nullable Transaction<String, K, V> transaction, @NotNull K key) {
+    public Optional<V> get(@Nullable Transaction<T, K, V> transaction, @NotNull K key) {
 
         if (key == null) {
             throw new NullPointerException("Get error : key is null.");
@@ -95,10 +94,11 @@ public abstract class TTable<K, V> implements CacheAble<K, V> {
     }
 
     public Optional<V> get(@NotNull K key) {
-        return get(null, key);
+        Optional<Transaction> transaction = TransactionUtils.current();
+        return get(transaction.isPresent() ? transaction.get() : null, key);
     }
 
-    public void set(@NotNull Transaction<String, K, V> transaction, @NotNull K key, @NotNull V value) {
+    public void set(@NotNull Transaction<T, K, V> transaction, @NotNull K key, @NotNull V value) {
 
         if (TransactionUtils.isNull(transaction)) {
             throw new TransactionException("Set error : can not set with out exception.");
@@ -121,7 +121,7 @@ public abstract class TTable<K, V> implements CacheAble<K, V> {
         }
     }
 
-    public void delete(@NotNull Transaction<String, K, V> transaction, @NotNull K key) {
+    public void delete(@NotNull Transaction<T, K, V> transaction, @NotNull K key) {
 
         if (TransactionUtils.isNull(transaction)) {
             throw new TransactionException("Delete error : can not delete with out exception.");
@@ -145,27 +145,45 @@ public abstract class TTable<K, V> implements CacheAble<K, V> {
 
     }
 
+    public void realSet(@NotNull K key, @NotNull V value) {
+        database.set(tableName, key, value);
+    }
+
+    public void realDelete(@NotNull K key) {
+        database.delete(tableName, key);
+    }
+
     @Override
     public Optional<V> getCache(K key) {
-        return cache.get(tableName, key);
+        if (enableCache) {
+            return cache.get(tableName, key);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
     public void putCache(K key, V value) {
-        cache.put(tableName, key, value);
+        if (enableCache) {
+            cache.put(tableName, key, value);
+        }
     }
 
     @Override
     public void putCache(K key, V value, long expire) {
-        cache.put(tableName, key, value, expire);
+        if (enableCache) {
+            cache.put(tableName, key, value, expire);
+        }
     }
 
     @Override
     public void removeCache(K key) {
-        cache.remove(tableName, key);
+        if (enableCache) {
+            cache.remove(tableName, key);
+        }
     }
 
-    public String getTableName() {
+    public T getTableName() {
         return tableName;
     }
 

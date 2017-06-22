@@ -11,4 +11,8 @@ public class GException extends RuntimeException {
         super(message);
     }
 
+    public GException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
+
 }
