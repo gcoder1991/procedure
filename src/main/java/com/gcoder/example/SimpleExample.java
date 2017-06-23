@@ -1,6 +1,7 @@
 package com.gcoder.example;
 
 import com.gcoder.database.redis.RedisAdapter;
+import com.gcoder.procedure.Procedure;
 import com.gcoder.table.RedisTableManager;
 import com.gcoder.transaction.RedisTransaction;
 
@@ -44,6 +45,13 @@ public class SimpleExample {
         }
 
         t2.commit();
+
+        new Procedure() {
+            @Override
+            public void run() {
+
+            }
+        };
 
     }
 
